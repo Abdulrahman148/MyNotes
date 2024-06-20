@@ -44,27 +44,18 @@ class MainActivity : AppCompatActivity() {
         NotesAdapter()
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         listItemBinding = ListItemBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        Toast.makeText(this, "on create", Toast.LENGTH_SHORT).show()
-
-
         initViewModel()
         initViews()
-
+        showNotes()
 
         deleteIcon.setOnClickListener {
             onCreateDialog().show()
-        }
-
-        listItemBinding.root.setOnLongClickListener {
-            Toast.makeText(this, "All notes deleted!", Toast.LENGTH_SHORT).show()
-            true
         }
 
         binding.fab.setOnClickListener {
@@ -73,31 +64,6 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    override fun onPause() {
-        super.onPause()
-        Toast.makeText(this, "on pause", Toast.LENGTH_SHORT).show()
-
-    }
-
-    override fun onStop() {
-        super.onStop()
-        Toast.makeText(this, "on stop", Toast.LENGTH_SHORT).show()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Toast.makeText(this, "on resume", Toast.LENGTH_SHORT).show()
-    }
-
-    override fun onRestart() {
-        super.onRestart()
-        Toast.makeText(this, "on restart", Toast.LENGTH_SHORT).show()
-    }
-
-    override fun onStart() {
-        super.onStart()
-        Toast.makeText(this, "on start", Toast.LENGTH_SHORT).show()
-    }
 
     private fun initViewModel() {
         notesViewModel = ViewModelProvider(
