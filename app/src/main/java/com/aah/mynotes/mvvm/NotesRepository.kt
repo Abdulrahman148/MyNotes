@@ -1,5 +1,6 @@
 package com.aah.mynotes.mvvm
 
+import android.provider.ContactsContract.CommonDataKinds.Note
 import androidx.lifecycle.LiveData
 import com.aah.mynotes.db.Notes
 import com.aah.mynotes.db.NotesDao
@@ -14,8 +15,12 @@ class NotesRepository(private val dao: NotesDao) {
         dao.insertNote(notes)
     }
 
-    suspend fun deleteNotes() {
+    suspend fun deleteAllNotes() {
         dao.deleteAllNotes()
+    }
+
+    suspend fun deleteNote(note: Notes) {
+        dao.deleteNote(note)
     }
 
 }

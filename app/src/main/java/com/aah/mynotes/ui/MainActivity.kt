@@ -35,19 +35,17 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), OnItemClickListener {
     private lateinit var binding: ActivityMainBinding
     private lateinit var notesViewModel: NotesViewModel
     private lateinit var deleteIcon: ImageView
-    private lateinit var listItemBinding: ListItemBinding
     private val noteAdapter by lazy {
-        NotesAdapter()
+        NotesAdapter(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
-        listItemBinding = ListItemBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         initViewModel()
@@ -63,7 +61,6 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
-
 
     private fun initViewModel() {
         notesViewModel = ViewModelProvider(
@@ -106,6 +103,24 @@ class MainActivity : AppCompatActivity() {
     private fun addNote() {
         intent = Intent(this@MainActivity, AddNotesActivity::class.java)
         startActivity(intent)
+    }
+
+    override fun onItemClick(note: Notes) {
+        deleteItemDialog(note).show()
+    }
+
+    private fun deleteItemDialog(note: Notes): Dialog {
+        return MaterialAlertDialogBuilder(this, R.style.MaterialAlertDialog_rounded)
+            .setMessage("Are you sure to delete this notes?")
+            .setPositiveButton("OK") { _, _ ->
+                notesViewModel.deleteNote(note)
+                noteAdapter.clear()
+                Toast.makeText(this, "Note deleted successfully!", Toast.LENGTH_SHORT).show()
+            }
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.cancel()
+            }
+            .create()
     }
 
 }

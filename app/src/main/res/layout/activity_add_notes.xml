@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     tools:context=".ui.AddNotesActivity"
-    android:background="#FFF2F5"
+    android:background="#FFFAFB"
     android:layoutDirection="ltr">
 
 <androidx.constraintlayout.widget.ConstraintLayout

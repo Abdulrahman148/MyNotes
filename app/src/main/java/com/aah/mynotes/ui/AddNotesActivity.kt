@@ -27,15 +27,11 @@ class AddNotesActivity : AppCompatActivity() {
         initViewModel()
 
         binding.addNotesSaveBtn.setOnClickListener {
-
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                 return@setOnClickListener
             }
             mLastClickTime = SystemClock.elapsedRealtime()
-
             insertNote()
-            Toast.makeText(this, "Note Saved Successfully!", Toast.LENGTH_SHORT).show()
-            returnToMainActivity()
         }
 
         binding.addNotesCancelBtn.setOnClickListener {
@@ -60,7 +56,16 @@ class AddNotesActivity : AppCompatActivity() {
         val title = binding.addTitle.text.toString()
         val subTitle = binding.addSubTitle.text.toString()
         val note = Notes(title, subTitle)
-        notesViewModel.insertNote(note)
+
+        if (title.isBlank() || subTitle.isBlank()) {
+            Toast.makeText(this, "Please enter all the fields!", Toast.LENGTH_SHORT).show()
+        } else {
+            notesViewModel.insertNote(note)
+            returnToMainActivity()
+            Toast.makeText(this, "Note Saved Successfully!", Toast.LENGTH_SHORT).show()
+        }
+
+
     }
 
     private fun returnToMainActivity() {
