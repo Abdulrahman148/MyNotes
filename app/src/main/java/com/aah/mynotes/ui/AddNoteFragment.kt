@@ -1,30 +1,45 @@
 package com.aah.mynotes.ui
 
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.SystemClock
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.aah.mynotes.databinding.ActivityAddNotesBinding
+import androidx.navigation.NavController
+import androidx.navigation.fragment.findNavController
+import com.aah.mynotes.R
+import com.aah.mynotes.databinding.FragmentAddNoteBinding
 import com.aah.mynotes.db.Notes
 import com.aah.mynotes.db.NotesDatabase
 import com.aah.mynotes.mvvm.NotesFactoryViewModel
 import com.aah.mynotes.mvvm.NotesRepository
 import com.aah.mynotes.mvvm.NotesViewModel
 
-class AddNotesActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityAddNotesBinding
+
+class AddNoteFragment : Fragment() {
+    private lateinit var binding: FragmentAddNoteBinding
     private lateinit var notesViewModel: NotesViewModel
+    private lateinit var mNavController: NavController
     private var mLastClickTime: Long = 0
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityAddNotesBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentAddNoteBinding.inflate(layoutInflater)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         initViewModel()
+        mNavController = findNavController()
 
         binding.addNotesSaveBtn.setOnClickListener {
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
@@ -32,6 +47,7 @@ class AddNotesActivity : AppCompatActivity() {
             }
             mLastClickTime = SystemClock.elapsedRealtime()
             insertNote()
+
         }
 
         binding.addNotesCancelBtn.setOnClickListener {
@@ -46,7 +62,7 @@ class AddNotesActivity : AppCompatActivity() {
             this,
             NotesFactoryViewModel(
                 NotesRepository(
-                    NotesDatabase.getDatabase(applicationContext).notesDao()
+                    NotesDatabase.getDatabase(requireContext()).notesDao()
                 )
             )
         )[NotesViewModel::class.java]
@@ -58,19 +74,17 @@ class AddNotesActivity : AppCompatActivity() {
         val note = Notes(title, subTitle)
 
         if (title.isBlank() || subTitle.isBlank()) {
-            Toast.makeText(this, "Please enter all the fields!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Please enter all the fields!", Toast.LENGTH_SHORT).show()
         } else {
             notesViewModel.insertNote(note)
             returnToMainActivity()
-            Toast.makeText(this, "Note Saved Successfully!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Note Saved Successfully!", Toast.LENGTH_SHORT).show()
         }
 
 
     }
 
     private fun returnToMainActivity() {
-        intent = Intent(this@AddNotesActivity, MainActivity::class.java)
-        startActivity(intent)
+        mNavController.navigate(R.id.action_addNoteFragment_to_showAllNotesFragment)
     }
-
 }

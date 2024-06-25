@@ -9,7 +9,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Database(entities = [Notes::class], version = 1, exportSchema = false)
-public abstract class NotesDatabase : RoomDatabase() {
+abstract class NotesDatabase : RoomDatabase() {
 
     abstract fun notesDao() : NotesDao
 

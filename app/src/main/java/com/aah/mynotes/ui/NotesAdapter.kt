@@ -10,7 +10,7 @@ import com.aah.mynotes.R
 import com.aah.mynotes.databinding.ListItemBinding
 import com.aah.mynotes.db.Notes
 
-class NotesAdapter(private val onItemClickListener: OnItemClickListener) : RecyclerView.Adapter<NotesAdapter.NoteViewHolder>() {
+class NotesAdapter(private val onItemClickListener: OnItemClickListener, private val onCardClickListener: OnCardClickListener) : RecyclerView.Adapter<NotesAdapter.NoteViewHolder>() {
 
     var dataSet: MutableList<Notes> = mutableListOf()
 
@@ -54,6 +54,10 @@ class NotesAdapter(private val onItemClickListener: OnItemClickListener) : Recyc
         holder.deleteItem.setOnClickListener {
             onItemClickListener.onItemClick(dataSet[position])
         }
+
+        holder.cardView.setOnClickListener {
+            onCardClickListener.onCardClick(dataSet[position])
+        }
     }
 
     override fun getItemCount() = dataSet.size
@@ -61,4 +65,8 @@ class NotesAdapter(private val onItemClickListener: OnItemClickListener) : Recyc
 
 interface OnItemClickListener {
     fun onItemClick(note: Notes)
+}
+
+interface OnCardClickListener {
+    fun onCardClick(note: Notes)
 }

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/showAllNotesFragment">
+
+    <fragment
+        android:id="@+id/showAllNotesFragment"
+        android:name="com.aah.mynotes.ui.ShowAllNotesFragment"
+        android:label="fragment_show_all_notes"
+        tools:layout="@layout/fragment_show_all_notes">
+
+        <action android:id="@+id/action_showAllNotesFragment_to_addNoteFragment"
+            app:destination="@id/addNoteFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@animator/nav_default_exit_anim"/>
+
+        <action android:id="@+id/action_showAllNotesFragment_to_showNoteFragment"
+            app:destination="@id/showNoteFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@animator/nav_default_exit_anim"/>
+
+    </fragment>
+    <fragment
+        android:id="@+id/addNoteFragment"
+        android:name="com.aah.mynotes.ui.AddNoteFragment"
+        android:label="fragment_add_note"
+        tools:layout="@layout/fragment_add_note">
+
+        <action
+            android:id="@+id/action_addNoteFragment_to_showAllNotesFragment"
+            app:destination="@+id/showAllNotesFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@animator/nav_default_exit_anim"/>
+
+    </fragment>
+    <fragment
+        android:id="@+id/showNoteFragment"
+        android:name="com.aah.mynotes.ui.ShowNoteFragment"
+        android:label="fragment_show_note"
+        tools:layout="@layout/fragment_show_note" >
+
+        <argument
+            android:name="noteTitle"
+            app:argType="string" />
+
+        <argument
+            android:name="noteSubTitle"
+            app:argType="string" />
+
+    </fragment>
+</navigation>

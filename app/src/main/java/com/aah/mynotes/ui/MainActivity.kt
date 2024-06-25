@@ -18,6 +18,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
 import com.aah.mynotes.R
 import com.aah.mynotes.databinding.ActivityMainBinding
 import com.aah.mynotes.databinding.ListItemBinding
@@ -35,92 +37,21 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
-class MainActivity : AppCompatActivity(), OnItemClickListener {
+class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var notesViewModel: NotesViewModel
-    private lateinit var deleteIcon: ImageView
-    private val noteAdapter by lazy {
-        NotesAdapter(this)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        initViewModel()
-        initViews()
-        showNotes()
 
-        deleteIcon.setOnClickListener {
-            onCreateDialog().show()
-        }
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navController = navHostFragment.navController
 
-        binding.fab.setOnClickListener {
-            addNote()
-        }
 
     }
 
-    private fun initViewModel() {
-        notesViewModel = ViewModelProvider(
-            this,
-            NotesFactoryViewModel(
-                NotesRepository(
-                    NotesDatabase.getDatabase(applicationContext).notesDao()
-                )
-            )
-        )[NotesViewModel::class.java]
-    }
 
-    private fun initViews() {
-        binding.recyclerView.adapter = noteAdapter
-        binding.recyclerView.setHasFixedSize(true)
-        deleteIcon = findViewById(R.id.delete_icon)
-    }
-
-    private fun showNotes() {
-        noteAdapter.clear()
-        notesViewModel.allNotes.observe(this@MainActivity) {
-            noteAdapter.addDate(it.toMutableList())
-        }
-    }
-
-    private fun onCreateDialog(): Dialog {
-        return MaterialAlertDialogBuilder(this, R.style.MaterialAlertDialog_rounded)
-            .setMessage("Delete all notes?")
-            .setPositiveButton("OK") { _, _ ->
-                notesViewModel.deleteAllNotes()
-                noteAdapter.clear()
-                Toast.makeText(this, "All notes deleted!", Toast.LENGTH_SHORT).show()
-            }
-            .setNegativeButton("Cancel") { dialog, _ ->
-                dialog.cancel()
-            }
-            .create()
-    }
-
-    private fun addNote() {
-        intent = Intent(this@MainActivity, AddNotesActivity::class.java)
-        startActivity(intent)
-    }
-
-    override fun onItemClick(note: Notes) {
-        deleteItemDialog(note).show()
-    }
-
-    private fun deleteItemDialog(note: Notes): Dialog {
-        return MaterialAlertDialogBuilder(this, R.style.MaterialAlertDialog_rounded)
-            .setMessage("Are you sure to delete this notes?")
-            .setPositiveButton("OK") { _, _ ->
-                notesViewModel.deleteNote(note)
-                noteAdapter.clear()
-                Toast.makeText(this, "Note deleted successfully!", Toast.LENGTH_SHORT).show()
-            }
-            .setNegativeButton("Cancel") { dialog, _ ->
-                dialog.cancel()
-            }
-            .create()
-    }
 
 }
